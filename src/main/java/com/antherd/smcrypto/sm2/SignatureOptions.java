@@ -8,7 +8,7 @@ public class SignatureOptions {
     boolean der; // der编解码
     boolean hash; // sm3杂凑
     String publicKey; // 公钥
-    String userId = null; // userId（长度小于 8192）默认值为 1234567812345678
+    String userId; // userId（长度小于 8192）默认值为 1234567812345678
 
     public SignatureOptions() {
     }

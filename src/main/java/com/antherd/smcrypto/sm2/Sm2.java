@@ -11,6 +11,7 @@ import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Sm2 {
@@ -90,7 +91,7 @@ public class Sm2 {
     public static String doSignature(String msg, String publicKey, SignatureOptions signatureOptions) {
         String signature = null;
         try {
-            Object[] param = new Object[]{msg, publicKey, signatureOptions};
+            Object[] param = new Object[]{msg, publicKey, getOptionsMap(signatureOptions)};
             signature = (String) invocable.invokeFunction("doSignature", param);
         } catch (ScriptException | NoSuchMethodException e) {
             e.printStackTrace();
@@ -112,7 +113,7 @@ public class Sm2 {
     public static boolean doVerifySignature(String msg, String signHex, String publicKey, SignatureOptions signatureOptions) {
         boolean result = false;
         try {
-            Object[] param = new Object[]{msg, signHex, publicKey, signatureOptions};
+            Object[] param = new Object[]{msg, signHex, publicKey, getOptionsMap(signatureOptions)};
             result = (boolean) invocable.invokeFunction("doVerifySignature", msg, signHex, publicKey, signatureOptions);
         } catch (ScriptException | NoSuchMethodException e) {
             e.printStackTrace();
@@ -126,6 +127,21 @@ public class Sm2 {
     public static boolean doVerifySignature(String msg, String signHex, String publicKey) {
         SignatureOptions signatureOptions = new SignatureOptions();
         return doVerifySignature(msg, signHex, publicKey, signatureOptions);
+    }
+
+    /**
+     * 默认值选项删除key
+     * @param signatureOptions
+     * @return
+     */
+    private static Map<String, Object> getOptionsMap(SignatureOptions signatureOptions) {
+        Map<String, Object> options = new HashMap<>();
+        if (signatureOptions.getPointPool() != null && signatureOptions.getPointPool().size() == 4) options.put("pointPool", signatureOptions.getPointPool());
+        if (signatureOptions.isDer()) options.put("der", signatureOptions.isDer());
+        if (signatureOptions.isHash()) options.put("hash", signatureOptions.isHash());
+        if (!Strings.isBlank(signatureOptions.getPublicKey())) options.put("publicKey", signatureOptions.getPublicKey());
+        if (!Strings.isBlank(signatureOptions.getUserId())) options.put("userId", signatureOptions.getUserId());
+        return options;
     }
 
     /**
