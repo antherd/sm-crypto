@@ -6,13 +6,12 @@ import com.antherd.smcrypto.sm2.SignatureOptions;
 import com.antherd.smcrypto.sm2.Sm2;
 import org.junit.jupiter.api.Test;
 
-import javax.script.ScriptException;
 import java.util.*;
 
 public class Sm2Test {
 
     @Test
-    public void test() throws ScriptException, NoSuchMethodException {
+    public void test() {
 
         /**
          * 生成密钥对

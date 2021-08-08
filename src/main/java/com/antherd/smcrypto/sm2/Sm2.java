@@ -31,9 +31,13 @@ public class Sm2 {
     /**
      * 生成密钥对：publicKey = privateKey * G
      */
-    public static Keypair generateKeyPairHex() throws ScriptException, NoSuchMethodException {
-
-        ScriptObjectMirror scriptObjectMirror = (ScriptObjectMirror) invocable.invokeFunction("generateKeyPairHex");
+    public static Keypair generateKeyPairHex() {
+        ScriptObjectMirror scriptObjectMirror = null;
+        try {
+            scriptObjectMirror = (ScriptObjectMirror) invocable.invokeFunction("generateKeyPairHex");
+        } catch (ScriptException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
         return new Keypair((String) scriptObjectMirror.get("privateKey"), (String) scriptObjectMirror.get("publicKey"));
     }
 
