@@ -3,6 +3,7 @@ package com.antherd.smcrypto.sm2;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.lang.Nullable;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -88,11 +89,10 @@ public class Sm2 {
     /**
      * 签名
      */
-    public static String doSignature(String msg, String publicKey, SignatureOptions signatureOptions) {
+    public static String doSignature(String msg, String publicKey, @Nullable SignatureOptions signatureOptions) {
         String signature = null;
         try {
-            Object[] param = new Object[]{msg, publicKey, getOptionsMap(signatureOptions)};
-            signature = (String) invocable.invokeFunction("doSignature", param);
+            signature = (String) invocable.invokeFunction("doSignature", msg, publicKey, getOptionsMap(signatureOptions));
         } catch (ScriptException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -103,18 +103,16 @@ public class Sm2 {
      * 签名
      */
     public static String doSignature(String msg, String publicKey) {
-        SignatureOptions signatureOptions = new SignatureOptions();
-        return doSignature(msg, publicKey, signatureOptions);
+        return doSignature(msg, publicKey, null);
     }
 
     /**
      * 验签
      */
-    public static boolean doVerifySignature(String msg, String signHex, String publicKey, SignatureOptions signatureOptions) {
+    public static boolean doVerifySignature(String msg, String signHex, String publicKey, @Nullable SignatureOptions signatureOptions) {
         boolean result = false;
         try {
-            Object[] param = new Object[]{msg, signHex, publicKey, getOptionsMap(signatureOptions)};
-            result = (boolean) invocable.invokeFunction("doVerifySignature", msg, signHex, publicKey, signatureOptions);
+            result = (boolean) invocable.invokeFunction("doVerifySignature", msg, signHex, publicKey, getOptionsMap(signatureOptions));
         } catch (ScriptException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -125,21 +123,24 @@ public class Sm2 {
      * 验签
      */
     public static boolean doVerifySignature(String msg, String signHex, String publicKey) {
-        SignatureOptions signatureOptions = new SignatureOptions();
-        return doVerifySignature(msg, signHex, publicKey, signatureOptions);
+        return doVerifySignature(msg, signHex, publicKey, null);
     }
 
     /**
-     * 默认值选项删除key
+     * 若签名参数中为默认值， js调用时不添加此参数
+     *
      * @param signatureOptions
      * @return
      */
     private static Map<String, Object> getOptionsMap(SignatureOptions signatureOptions) {
         Map<String, Object> options = new HashMap<>();
-        if (signatureOptions.getPointPool() != null && signatureOptions.getPointPool().size() == 4) options.put("pointPool", signatureOptions.getPointPool());
+        if (signatureOptions == null) return options;
+        if (signatureOptions.getPointPool() != null && signatureOptions.getPointPool().size() == 4)
+            options.put("pointPool", signatureOptions.getPointPool());
         if (signatureOptions.isDer()) options.put("der", signatureOptions.isDer());
         if (signatureOptions.isHash()) options.put("hash", signatureOptions.isHash());
-        if (!Strings.isBlank(signatureOptions.getPublicKey())) options.put("publicKey", signatureOptions.getPublicKey());
+        if (!Strings.isBlank(signatureOptions.getPublicKey()))
+            options.put("publicKey", signatureOptions.getPublicKey());
         if (!Strings.isBlank(signatureOptions.getUserId())) options.put("userId", signatureOptions.getUserId());
         return options;
     }
