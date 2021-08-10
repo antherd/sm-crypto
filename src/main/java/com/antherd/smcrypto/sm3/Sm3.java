@@ -4,9 +4,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Sm3 {
 
@@ -14,11 +12,11 @@ public class Sm3 {
 
     static {
         try {
-            File sm3js = new File("src/js/sm3.js");
+            InputStream inputStream = Sm3.class.getClassLoader().getResourceAsStream("sm3.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            engine.eval(new FileReader(sm3js));
+            engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
             invocable = (Invocable) engine;
-        } catch (IOException | ScriptException e) {
+        } catch (ScriptException e) {
             e.printStackTrace();
         }
     }

@@ -4,9 +4,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +15,11 @@ public class Sm4 {
 
     static {
         try {
-            File sm2js = new File("src/js/sm4.js");
+            InputStream inputStream = Sm4.class.getClassLoader().getResourceAsStream("sm4.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            engine.eval(new FileReader(sm2js));
+            engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
             invocable = (Invocable) engine;
-        } catch (IOException | ScriptException e) {
+        } catch (ScriptException e) {
             e.printStackTrace();
         }
     }
