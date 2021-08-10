@@ -2,7 +2,7 @@ package com.antherd.smcrypto;
 
 import com.antherd.smcrypto.sm4.Sm4;
 import com.antherd.smcrypto.sm4.Sm4Options;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class Sm4Test {
 

@@ -1,9 +1,6 @@
 package com.antherd.smcrypto.sm2;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.lang.Nullable;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -21,7 +18,7 @@ public class Sm2 {
 
     static {
         try {
-            File sm2js = new ClassPathResource("sm2/sm2.js").getFile();
+            File sm2js = new File("src/js/sm2.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
             engine.eval(new FileReader(sm2js));
             invocable = (Invocable) engine;
@@ -45,9 +42,11 @@ public class Sm2 {
 
     /**
      * 加密
+     *
+     * @param cipherMode 1 - C1C3C2，0 - C1C2C3
      */
     public static String doEncrypt(String msg, String publicKey, int cipherMode) {
-        if (Strings.isBlank(msg)) return null;
+        if (msg == null || msg.trim().isEmpty()) return "";
         String encryptMsg = null;
         try {
             Object[] param = new Object[]{msg, publicKey, cipherMode};
@@ -67,8 +66,11 @@ public class Sm2 {
 
     /**
      * 解密
+     *
+     * @param cipherMode 1 - C1C3C2，0 - C1C2C3
      */
     public static String doDecrypt(String encryptData, String privateKey, int cipherMode) {
+        if (encryptData == null || encryptData.trim().isEmpty()) return "";
         String msg = null;
         try {
             Object[] param = new Object[]{encryptData, privateKey, cipherMode};
@@ -89,7 +91,7 @@ public class Sm2 {
     /**
      * 签名
      */
-    public static String doSignature(String msg, String publicKey, @Nullable SignatureOptions signatureOptions) {
+    public static String doSignature(String msg, String publicKey, SignatureOptions signatureOptions) {
         String signature = null;
         try {
             signature = (String) invocable.invokeFunction("doSignature", msg, publicKey, getOptionsMap(signatureOptions));
@@ -109,7 +111,7 @@ public class Sm2 {
     /**
      * 验签
      */
-    public static boolean doVerifySignature(String msg, String signHex, String publicKey, @Nullable SignatureOptions signatureOptions) {
+    public static boolean doVerifySignature(String msg, String signHex, String publicKey, SignatureOptions signatureOptions) {
         boolean result = false;
         try {
             result = (boolean) invocable.invokeFunction("doVerifySignature", msg, signHex, publicKey, getOptionsMap(signatureOptions));
@@ -139,9 +141,10 @@ public class Sm2 {
             options.put("pointPool", signatureOptions.getPointPool());
         if (signatureOptions.isDer()) options.put("der", signatureOptions.isDer());
         if (signatureOptions.isHash()) options.put("hash", signatureOptions.isHash());
-        if (!Strings.isBlank(signatureOptions.getPublicKey()))
-            options.put("publicKey", signatureOptions.getPublicKey());
-        if (!Strings.isBlank(signatureOptions.getUserId())) options.put("userId", signatureOptions.getUserId());
+        String publicKey = signatureOptions.getPublicKey();
+        if (!(publicKey == null) && !publicKey.trim().equals("")) options.put("publicKey", publicKey);
+        String userId = signatureOptions.getUserId();
+        if (!(userId == null) && !userId.trim().equals("")) options.put("userId", userId);
         return options;
     }
 

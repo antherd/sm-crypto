@@ -1,7 +1,7 @@
 package com.antherd.smcrypto;
 
 import com.antherd.smcrypto.sm3.Sm3;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class Sm3Test {
 

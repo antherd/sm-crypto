@@ -1,9 +1,5 @@
 package com.antherd.smcrypto.sm4;
 
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.lang.Nullable;
-
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -21,7 +17,7 @@ public class Sm4 {
 
     static {
         try {
-            File sm2js = new ClassPathResource("sm4/sm4.js").getFile();
+            File sm2js = new File("src/js/sm4.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
             engine.eval(new FileReader(sm2js));
             invocable = (Invocable) engine;
@@ -36,7 +32,8 @@ public class Sm4 {
      * @return 16 进制密文字符串
      * @msg utf8 明文字符串
      */
-    public static String encrypt(String msg, String key, @Nullable Sm4Options sm4Options) {
+    public static String encrypt(String msg, String key, Sm4Options sm4Options) {
+        if (msg == null || msg.trim().isEmpty()) return "";
         String encryptData = null;
         try {
             encryptData = (String) invocable.invokeFunction("encrypt", msg, key, getOptionsMap(sm4Options));
@@ -62,7 +59,8 @@ public class Sm4 {
      * @return utf8 字符串
      * @msg 16 进制字符串
      */
-    public static String decrypt(String encryptData, String key, @Nullable Sm4Options sm4Options) {
+    public static String decrypt(String encryptData, String key, Sm4Options sm4Options) {
+        if (encryptData == null || encryptData.trim().isEmpty()) return "";
         String decryptData = null;
         try {
             decryptData = (String) invocable.invokeFunction("decrypt", encryptData, key, getOptionsMap(sm4Options));
@@ -155,9 +153,12 @@ public class Sm4 {
     private static Map<String, Object> getOptionsMap(Sm4Options sm4Options) {
         Map<String, Object> options = new HashMap<>();
         if (sm4Options == null) return options;
-        if (!Strings.isBlank(sm4Options.getPadding())) options.put("padding", sm4Options.getPadding());
-        if (!Strings.isBlank(sm4Options.getMode())) options.put("mode", sm4Options.getMode());
-        if (!Strings.isBlank(sm4Options.getIv())) options.put("iv", sm4Options.getIv());
+        String padding = sm4Options.getPadding();
+        if (!(padding == null) && !padding.trim().equals("")) options.put("padding", padding);
+        String mode = sm4Options.getMode();
+        if (!(mode == null) && !mode.trim().equals("")) options.put("mode", mode);
+        String iv = sm4Options.getIv();
+        if (!(iv == null) && !iv.trim().equals("")) options.put("iv", iv);
         return options;
     }
 }

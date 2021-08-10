@@ -4,7 +4,7 @@ import com.antherd.smcrypto.sm2.Keypair;
 import com.antherd.smcrypto.sm2.Point;
 import com.antherd.smcrypto.sm2.SignatureOptions;
 import com.antherd.smcrypto.sm2.Sm2;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.*;
 
@@ -27,9 +27,8 @@ public class Sm2Test {
          */
         String msg = "这是需要加密的文字！！！";
         System.out.println("msg: " + msg);
-        int cipherMode = 1; // 1 - C1C3C2，0 - C1C2C3，默认为1
-        String encryptData = Sm2.doEncrypt(msg, publicKey, cipherMode); // 加密结果
-        String decryptData = Sm2.doDecrypt(encryptData, privateKey, cipherMode); // 解密结果
+        String encryptData = Sm2.doEncrypt(msg, publicKey); // 加密结果
+        String decryptData = Sm2.doDecrypt(encryptData, privateKey); // 解密结果
         System.out.println("encryptData: " + encryptData);
         System.out.println("decryptData: " + decryptData);
 
