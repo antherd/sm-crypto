@@ -135,4 +135,4 @@ String decryptData8 = Sm4.decrypt(encryptData, key, sm4Options8); // 解密，cb
 
 ## 协议
 
-MIT
+[MIT](https://github.com/antherd/sm-crypto/blob/master/LICENSE)
