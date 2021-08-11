@@ -27,8 +27,10 @@ public class Sm4 {
     /**
      * 加密
      *
-     * @return 16 进制密文字符串
-     * @msg utf8 明文字符串
+     * @param msg        明文
+     * @param key        key 16 进制字符串，要求为 128 比特
+     * @param sm4Options 加密配置
+     * @return 密文
      */
     public static String encrypt(String msg, String key, Sm4Options sm4Options) {
         if (msg == null || msg.trim().isEmpty()) return "";
@@ -44,8 +46,9 @@ public class Sm4 {
     /**
      * 加密
      *
-     * @return 16 进制字符串
-     * @msg utf8 字符串
+     * @param msg 明文
+     * @param key key 16 进制字符串，要求为 128 比特
+     * @return 密文
      */
     public static String encrypt(String msg, String key) {
         return encrypt(msg, key, null);
@@ -54,8 +57,10 @@ public class Sm4 {
     /**
      * 解密
      *
-     * @return utf8 字符串
-     * @msg 16 进制字符串
+     * @param encryptData 密文
+     * @param key         key 16 进制字符串，要求为 128 比特
+     * @param sm4Options  加密配置
+     * @return 明文
      */
     public static String decrypt(String encryptData, String key, Sm4Options sm4Options) {
         if (encryptData == null || encryptData.trim().isEmpty()) return "";
@@ -71,8 +76,9 @@ public class Sm4 {
     /**
      * 解密
      *
-     * @return utf8 字符串
-     * @msg 16 进制字符串
+     * @param encryptData 密文
+     * @param key         16 进制字符串，要求为 128 比特
+     * @return 明文
      */
     public static String decrypt(String encryptData, String key) {
         return decrypt(encryptData, key, null);
@@ -113,7 +119,10 @@ public class Sm4 {
     }
 
     /**
-     * 字节数组转 16 进制字符串
+     * byte数组转 16 进制字符串
+     *
+     * @param bytes byte数组
+     * @return 16 进制字符串
      */
     public static String bytesToHex(byte[] bytes) {
         if (bytes == null) return null;
@@ -130,6 +139,9 @@ public class Sm4 {
 
     /**
      * utf8 串转字节数组
+     *
+     * @param str utf8 串
+     * @return byte数组
      */
     public static byte[] utf8ToArray(String str) {
         return str.getBytes(StandardCharsets.UTF_8);
@@ -137,16 +149,19 @@ public class Sm4 {
 
     /**
      * 字节数组转 utf8 串
+     *
+     * @param arr byte数组
+     * @return utf8 串
      */
     public static String arrayToUtf8(byte[] arr) {
         return new String(arr, StandardCharsets.UTF_8);
     }
 
     /**
-     * 若sm4参数中为默认值， js调用时不添加此参数
+     * 若sm4配置中为默认值， js调用时不添加此参数
      *
-     * @param sm4Options sm4 加密/解密 参数
-     * @return js 加密/解密 参数
+     * @param sm4Options 加密配置
+     * @return 加密配置Map
      */
     private static Map<String, Object> getOptionsMap(Sm4Options sm4Options) {
         Map<String, Object> options = new HashMap<>();

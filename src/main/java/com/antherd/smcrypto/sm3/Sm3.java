@@ -23,6 +23,9 @@ public class Sm3 {
 
     /**
      * 杂凑
+     *
+     * @param msg 明文
+     * @return 杂凑
      */
     public static String sm3(String msg) {
         if (msg == null || msg.trim().isEmpty()) return "";

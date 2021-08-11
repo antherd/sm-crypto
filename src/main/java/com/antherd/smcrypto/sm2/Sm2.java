@@ -27,6 +27,8 @@ public class Sm2 {
 
     /**
      * 生成密钥对：publicKey = privateKey * G
+     *
+     * @return 公私钥对
      */
     public static Keypair generateKeyPairHex() {
         ScriptObjectMirror scriptObjectMirror = null;
@@ -41,7 +43,10 @@ public class Sm2 {
     /**
      * 加密
      *
+     * @param msg        明文
+     * @param publicKey  公钥
      * @param cipherMode 1 - C1C3C2，0 - C1C2C3
+     * @return 密文
      */
     public static String doEncrypt(String msg, String publicKey, int cipherMode) {
         if (msg == null || msg.trim().isEmpty()) return "";
@@ -57,6 +62,10 @@ public class Sm2 {
 
     /**
      * 加密 cipherMode = 1
+     *
+     * @param msg       明文
+     * @param publicKey 公钥
+     * @return 密文
      */
     public static String doEncrypt(String msg, String publicKey) {
         return doEncrypt(msg, publicKey, 1);
@@ -65,7 +74,10 @@ public class Sm2 {
     /**
      * 解密
      *
-     * @param cipherMode 1 - C1C3C2，0 - C1C2C3
+     * @param encryptData 密文
+     * @param privateKey  私钥
+     * @param cipherMode  1 - C1C3C2，0 - C1C2C3
+     * @return 明文
      */
     public static String doDecrypt(String encryptData, String privateKey, int cipherMode) {
         if (encryptData == null || encryptData.trim().isEmpty()) return "";
@@ -81,13 +93,22 @@ public class Sm2 {
 
     /**
      * 解密 cipherMode = 1
+     *
+     * @param encryptData 密文
+     * @param privateKey  私钥
+     * @return 明文
      */
-    public static String doDecrypt(String msg, String publicKey) {
-        return doDecrypt(msg, publicKey, 1);
+    public static String doDecrypt(String encryptData, String privateKey) {
+        return doDecrypt(encryptData, privateKey, 1);
     }
 
     /**
      * 签名
+     *
+     * @param msg              明文
+     * @param publicKey        公钥
+     * @param signatureOptions 签名配置
+     * @return 签名
      */
     public static String doSignature(String msg, String publicKey, SignatureOptions signatureOptions) {
         String signature = null;
@@ -101,6 +122,10 @@ public class Sm2 {
 
     /**
      * 签名
+     *
+     * @param msg       明文
+     * @param publicKey 公钥
+     * @return 签名
      */
     public static String doSignature(String msg, String publicKey) {
         return doSignature(msg, publicKey, null);
@@ -108,6 +133,12 @@ public class Sm2 {
 
     /**
      * 验签
+     *
+     * @param msg              明文
+     * @param signHex          签名
+     * @param publicKey        公钥
+     * @param signatureOptions 签名配置
+     * @return 验签是否通过
      */
     public static boolean doVerifySignature(String msg, String signHex, String publicKey, SignatureOptions signatureOptions) {
         boolean result = false;
@@ -121,16 +152,21 @@ public class Sm2 {
 
     /**
      * 验签
+     *
+     * @param msg       明文
+     * @param signHex   签名
+     * @param publicKey 公钥
+     * @return 验签是否通过
      */
     public static boolean doVerifySignature(String msg, String signHex, String publicKey) {
         return doVerifySignature(msg, signHex, publicKey, null);
     }
 
     /**
-     * 若签名参数中为默认值， js调用时不添加此参数
+     * 若签名配置中为默认值， js调用时不添加此参数
      *
-     * @param signatureOptions
-     * @return
+     * @param signatureOptions 签名配置
+     * @return 签名配置Map
      */
     private static Map<String, Object> getOptionsMap(SignatureOptions signatureOptions) {
         Map<String, Object> options = new HashMap<>();
@@ -148,6 +184,8 @@ public class Sm2 {
 
     /**
      * 获取椭圆曲线点
+     *
+     * @return 椭圆曲线点
      */
     public static Point getPoint() {
         Point point = null;
