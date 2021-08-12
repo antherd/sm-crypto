@@ -6,10 +6,15 @@
 >
 > PS: 小程序版：[https://github.com/wechat-miniprogram/sm-crypto](https://github.com/wechat-miniprogram/sm-crypto)
 
-## 安装
-
+## 如何使用
+### 如何引入依赖
+如果需要使用已发布的版本，在`dependencies`中添加如下依赖
 ```xml
-# TODO
+<dependency>
+    <groupId>com.antherd</groupId>
+    <artifactId>sm-crypto</artifactId>
+    <version>0.3.2</version>
+</dependency>
 ```
 
 ## sm2
