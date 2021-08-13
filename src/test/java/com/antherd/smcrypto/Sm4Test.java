@@ -12,7 +12,7 @@ public class Sm4Test {
         /**
          * 加密
          */
-        String msg = "hello world! 我是 juneandgreen.";
+        String msg = "hello world! 我是 antherd.";
         String key = "0123456789abcdeffedcba9876543210"; // 16 进制字符串，要求为 128 比特
 
         String encryptData1 = Sm4.encrypt(msg, key); // 加密，默认使用 pkcs#5 填充，输出16进制字符串

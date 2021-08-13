@@ -22,9 +22,9 @@
 ### 获取密钥对
 
 ```java
-Keypair point=Sm2.generateKeyPairHex();
-String privateKey=point.getPrivateKey(); // 公钥
-String publicKey=point.getPublicKey(); // 私钥
+Keypair keypair = Sm2.generateKeyPairHex();
+String privateKey = keypair.getPrivateKey(); // 公钥
+String publicKey = keypair.getPublicKey(); // 私钥
 ```
 
 ### 加密解密
@@ -41,49 +41,49 @@ String decryptData = Sm2.doDecrypt(encryptData, privateKey); // 解密结果
 
 ```java
 // 纯签名 + 生成椭圆曲线点
-String sigValueHex=Sm2.doSignature(msg,privateKey); // 签名
-boolean verifyResult=Sm2.doVerifySignature(msg,sigValueHex,publicKey); // 验签结果
+String sigValueHex = Sm2.doSignature(msg, privateKey); // 签名
+boolean verifyResult = Sm2.doVerifySignature(msg, sigValueHex, publicKey); // 验签结果
 
 // 纯签名
-Queue<Keypair> pointPool=new LinkedList(Arrays.asList(Sm2.getPoint(),Sm2.getPoint(),Sm2.getPoint(),Sm2.getPoint()));
-SignatureOptions signatureOptions2=new SignatureOptions();
+Queue<Point> pointPool = new LinkedList(Arrays.asList(Sm2.getPoint(), Sm2.getPoint(), Sm2.getPoint(), Sm2.getPoint()));
+SignatureOptions signatureOptions2 = new SignatureOptions();
 signatureOptions2.setPointPool(pointPool); // 传入事先已生成好的椭圆曲线点，可加快签名速度
-String sigValueHex2=Sm2.doSignature(msg,privateKey,signatureOptions2);
-boolean verifyResult2=Sm2.doVerifySignature(msg,sigValueHex2,publicKey); // 验签结果
+String sigValueHex2 = Sm2.doSignature(msg, privateKey, signatureOptions2);
+boolean verifyResult2 = Sm2.doVerifySignature(msg, sigValueHex2, publicKey); // 验签结果
 
 // 纯签名 + 生成椭圆曲线点 + der编解码
-SignatureOptions signatureOptions3=new SignatureOptions();
+SignatureOptions signatureOptions3 = new SignatureOptions();
 signatureOptions3.setDer(true);
-String sigValueHex3=Sm2.doSignature(msg,privateKey,signatureOptions3); // 签名
-boolean verifyResult3=Sm2.doVerifySignature(msg,sigValueHex3,publicKey,signatureOptions3); // 验签结果
+String sigValueHex3 = Sm2.doSignature(msg, privateKey, signatureOptions3); // 签名
+boolean verifyResult3 = Sm2.doVerifySignature(msg, sigValueHex3, publicKey, signatureOptions3); // 验签结果
 
 // 纯签名 + 生成椭圆曲线点 + sm3杂凑
-SignatureOptions signatureOptions4=new SignatureOptions();
+SignatureOptions signatureOptions4 = new SignatureOptions();
 signatureOptions4.setHash(true);
-String sigValueHex4=Sm2.doSignature(msg,privateKey,signatureOptions4); // 签名
-boolean verifyResult4=Sm2.doVerifySignature(msg,sigValueHex4,publicKey,signatureOptions4); // 验签结果
+String sigValueHex4 = Sm2.doSignature(msg, privateKey, signatureOptions4); // 签名
+boolean verifyResult4 = Sm2.doVerifySignature(msg, sigValueHex4, publicKey, signatureOptions4); // 验签结果
 
 // 纯签名 + 生成椭圆曲线点 + sm3杂凑（不做公钥推导）
-SignatureOptions signatureOptions5=new SignatureOptions();
+SignatureOptions signatureOptions5 = new SignatureOptions();
 signatureOptions5.setHash(true);
 signatureOptions5.setPublicKey(publicKey); // 传入公钥的话，可以去掉sm3杂凑中推导公钥的过程，速度会比纯签名 + 生成椭圆曲线点 + sm3杂凑快
-String sigValueHex5=Sm2.doSignature(msg,privateKey,signatureOptions5); // 签名
-boolean verifyResult5=Sm2.doVerifySignature(msg,sigValueHex5,publicKey,signatureOptions5); // 验签结果
+String sigValueHex5 = Sm2.doSignature(msg, privateKey, signatureOptions5); // 签名
+boolean verifyResult5 = Sm2.doVerifySignature(msg, sigValueHex5, publicKey, signatureOptions5); // 验签结果
 
 // 纯签名 + 生成椭圆曲线点 + sm3杂凑 + 不做公钥推 + 添加 userId（长度小于 8192）
 // 默认 userId 值为 1234567812345678
-SignatureOptions signatureOptions6=new SignatureOptions();
+SignatureOptions signatureOptions6 = new SignatureOptions();
 signatureOptions6.setHash(true);
 signatureOptions6.setPublicKey(publicKey);
 signatureOptions6.setUserId("testUserId");
-String sigValueHex6=Sm2.doSignature(msg,privateKey,signatureOptions6); // 签名
-boolean verifyResult6=Sm2.doVerifySignature(msg,sigValueHex6,publicKey,signatureOptions6); // 验签结果
+String sigValueHex6 = Sm2.doSignature(msg, privateKey, signatureOptions6); // 签名
+boolean verifyResult6 = Sm2.doVerifySignature(msg, sigValueHex6, publicKey, signatureOptions6); // 验签结果
 ```
 
 ### 获取椭圆曲线点
 
 ```java
-Point point=Sm2.getPoint(); // 获取一个椭圆曲线点，可在sm2签名时传入
+Point point = Sm2.getPoint(); // 获取一个椭圆曲线点，可在sm2签名时传入
 ```
 
 ## sm3
@@ -97,7 +97,7 @@ String hashData = Sm3.sm3("abc"); // 杂凑
 ### 加密
 
 ```java
-String msg = "hello world! 我是 juneandgreen.";
+String msg = "hello world! 我是 antherd.";
 String key = "0123456789abcdeffedcba9876543210"; // 16 进制字符串，要求为 128 比特
 
 String encryptData1 = Sm4.encrypt(msg, key); // 加密，默认使用 pkcs#5 填充，输出16进制字符串
