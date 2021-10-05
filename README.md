@@ -125,16 +125,16 @@ String key = "0123456789abcdeffedcba9876543210"; // 16 进制字符串，要求�
 String decryptData5 = Sm4.decrypt(encryptData, key); // 解密，默认使用 pkcs#5 填充，输出 utf8 字符串
 
 Sm4Options sm4Options6 = new Sm4Options();
-sm4Options2.setPadding("none");
+sm4Options6.setPadding("none");
 String decryptData6 = Sm4.decrypt(encryptData, key, sm4Options6); // 解密，不使用 padding，输出 utf8 字符串
 
 Sm4Options sm4Options7 = new Sm4Options();
-sm4Options2.setPadding("none");
+sm4Options7.setPadding("none");
 byte[] decryptData7 = Sm4.utf8ToArray(Sm4.decrypt(encryptData, key, sm4Options7)); // 解密，不使用 padding，输出转为字节数组
 
 Sm4Options sm4Options8 = new Sm4Options();
-sm4Options4.setMode("cbc");
-sm4Options4.setIv("fedcba98765432100123456789abcdef");
+sm4Options8.setMode("cbc");
+sm4Options8.setIv("fedcba98765432100123456789abcdef");
 String decryptData8 = Sm4.decrypt(encryptData, key, sm4Options8); // 解密，cbc 模式，输出 utf8 字符串
 ```
 
