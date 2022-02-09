@@ -6,6 +6,9 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
 
+/**
+ * @author geyiwei
+ */
 public class Sm3 {
 
     private static Invocable invocable = null;
@@ -14,6 +17,7 @@ public class Sm3 {
         try {
             InputStream inputStream = Sm3.class.getClassLoader().getResourceAsStream("sm3.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+            assert inputStream != null;
             engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
             invocable = (Invocable) engine;
         } catch (ScriptException e) {
@@ -28,7 +32,9 @@ public class Sm3 {
      * @return 杂凑
      */
     public static String sm3(String msg) {
-        if (msg == null || msg.trim().isEmpty()) return "";
+        if (msg == null || msg.trim().isEmpty()) {
+            return "";
+        }
         String hashData = null;
         try {
             hashData = (String) invocable.invokeFunction("constructSm3", msg);

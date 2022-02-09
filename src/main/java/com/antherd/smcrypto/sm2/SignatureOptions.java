@@ -2,13 +2,35 @@ package com.antherd.smcrypto.sm2;
 
 import java.util.Queue;
 
+/**
+ * @author geyiwei
+ */
 public class SignatureOptions {
 
-    Queue<Point> pointPool; // 椭圆曲线点
-    boolean der; // der编解码
-    boolean hash; // sm3杂凑
-    String publicKey; // 公钥
-    String userId; // userId（长度小于 8192）默认值为 1234567812345678
+    /**
+     *  椭圆曲线点
+     */
+    Queue<Point> pointPool;
+
+    /**
+     * der编解码
+     */
+    boolean der;
+
+    /**
+     *  sm3杂凑
+     */
+    boolean hash;
+
+    /**
+     * 公钥
+     */
+    String publicKey;
+
+    /**
+     * userId（长度小于 8192）默认值为 1234567812345678
+     */
+    String userId;
 
     public SignatureOptions() {
     }

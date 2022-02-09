@@ -9,6 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author geyiwei
+ */
 public class Sm4 {
 
     private static Invocable invocable = null;
@@ -17,6 +20,7 @@ public class Sm4 {
         try {
             InputStream inputStream = Sm4.class.getClassLoader().getResourceAsStream("sm4.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+            assert inputStream != null;
             engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
             invocable = (Invocable) engine;
         } catch (ScriptException e) {
@@ -33,7 +37,9 @@ public class Sm4 {
      * @return 密文
      */
     public static String encrypt(String msg, String key, Sm4Options sm4Options) {
-        if (msg == null || msg.trim().isEmpty()) return "";
+        if (msg == null || msg.trim().isEmpty()) {
+            return "";
+        }
         String encryptData = null;
         try {
             encryptData = (String) invocable.invokeFunction("encrypt", msg, key, getOptionsMap(sm4Options));
@@ -63,7 +69,9 @@ public class Sm4 {
      * @return 明文
      */
     public static String decrypt(String encryptData, String key, Sm4Options sm4Options) {
-        if (encryptData == null || encryptData.trim().isEmpty()) return "";
+        if (encryptData == null || encryptData.trim().isEmpty()) {
+            return "";
+        }
         String decryptData = null;
         try {
             decryptData = (String) invocable.invokeFunction("decrypt", encryptData, key, getOptionsMap(sm4Options));
@@ -125,7 +133,9 @@ public class Sm4 {
      * @return 16 进制字符串
      */
     public static String bytesToHex(byte[] bytes) {
-        if (bytes == null) return null;
+        if (bytes == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         for (byte aByte : bytes) {
             String hex = Integer.toHexString(aByte & 0xFF);
@@ -165,13 +175,21 @@ public class Sm4 {
      */
     private static Map<String, Object> getOptionsMap(Sm4Options sm4Options) {
         Map<String, Object> options = new HashMap<>();
-        if (sm4Options == null) return options;
+        if (sm4Options == null) {
+            return options;
+        }
         String padding = sm4Options.getPadding();
-        if (!(padding == null) && !padding.trim().equals("")) options.put("padding", padding);
+        if (padding != null && !"".equals(padding.trim())) {
+            options.put("padding", padding);
+        }
         String mode = sm4Options.getMode();
-        if (!(mode == null) && !mode.trim().equals("")) options.put("mode", mode);
+        if (mode != null && !"".equals(mode.trim())) {
+            options.put("mode", mode);
+        }
         String iv = sm4Options.getIv();
-        if (!(iv == null) && !iv.trim().equals("")) options.put("iv", iv);
+        if (iv != null && !"".equals(iv.trim())) {
+            options.put("iv", iv);
+        }
         return options;
     }
 }

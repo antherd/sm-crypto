@@ -10,6 +10,9 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author geyiwei
+ */
 public class Sm2 {
 
     private static Invocable invocable = null;
@@ -18,6 +21,7 @@ public class Sm2 {
         try {
             InputStream inputStream = Sm2.class.getClassLoader().getResourceAsStream("sm2.js");
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+            assert inputStream != null;
             engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
             invocable = (Invocable) engine;
         } catch (ScriptException e) {
@@ -49,7 +53,9 @@ public class Sm2 {
      * @return 密文
      */
     public static String doEncrypt(String msg, String publicKey, int cipherMode) {
-        if (msg == null || msg.trim().isEmpty()) return "";
+        if (msg == null || msg.trim().isEmpty()) {
+            return "";
+        }
         String encryptMsg = null;
         try {
             Object[] param = new Object[]{msg, publicKey, cipherMode};
@@ -80,7 +86,9 @@ public class Sm2 {
      * @return 明文
      */
     public static String doDecrypt(String encryptData, String privateKey, int cipherMode) {
-        if (encryptData == null || encryptData.trim().isEmpty()) return "";
+        if (encryptData == null || encryptData.trim().isEmpty()) {
+            return "";
+        }
         String msg = null;
         try {
             Object[] param = new Object[]{encryptData, privateKey, cipherMode};
@@ -169,16 +177,27 @@ public class Sm2 {
      * @return 签名配置Map
      */
     private static Map<String, Object> getOptionsMap(SignatureOptions signatureOptions) {
-        Map<String, Object> options = new HashMap<>();
-        if (signatureOptions == null) return options;
-        if (signatureOptions.getPointPool() != null && signatureOptions.getPointPool().size() == 4)
+        Map<String, Object> options = new HashMap<>(6);
+        if (signatureOptions == null) {
+            return options;
+        }
+        if (signatureOptions.getPointPool() != null && signatureOptions.getPointPool().size() == 4) {
             options.put("pointPool", signatureOptions.getPointPool());
-        if (signatureOptions.isDer()) options.put("der", signatureOptions.isDer());
-        if (signatureOptions.isHash()) options.put("hash", signatureOptions.isHash());
+        }
+        if (signatureOptions.isDer()) {
+            options.put("der", signatureOptions.isDer());
+        }
+        if (signatureOptions.isHash()) {
+            options.put("hash", signatureOptions.isHash());
+        }
         String publicKey = signatureOptions.getPublicKey();
-        if (!(publicKey == null) && !publicKey.trim().equals("")) options.put("publicKey", publicKey);
+        if (publicKey!= null && !"".equals(publicKey.trim())) {
+            options.put("publicKey", publicKey);
+        }
         String userId = signatureOptions.getUserId();
-        if (!(userId == null) && !userId.trim().equals("")) options.put("userId", userId);
+        if (userId != null && !"".equals(userId.trim())) {
+            options.put("userId", userId);
+        }
         return options;
     }
 

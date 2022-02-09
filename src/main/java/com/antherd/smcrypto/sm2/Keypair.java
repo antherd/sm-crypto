@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * 公私钥对
+ * @author geyiwei
  */
 public class Keypair implements Serializable {
 
