@@ -30,15 +30,16 @@ public class Sm3 {
      *
      * @param msg 明文
      * @return 杂凑
+     * @throws ScriptException Scripting通用异常
      */
-    public static String sm3(String msg) {
+    public static String sm3(String msg) throws ScriptException {
         if (msg == null || msg.trim().isEmpty()) {
             return "";
         }
         String hashData = null;
         try {
             hashData = (String) invocable.invokeFunction("constructSm3", msg);
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return hashData;

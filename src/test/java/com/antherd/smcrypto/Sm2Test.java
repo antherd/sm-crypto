@@ -6,12 +6,13 @@ import com.antherd.smcrypto.sm2.SignatureOptions;
 import com.antherd.smcrypto.sm2.Sm2;
 import org.junit.Test;
 
+import javax.script.ScriptException;
 import java.util.*;
 
 public class Sm2Test {
 
     @Test
-    public void test() {
+    public void test() throws ScriptException {
 
         /**
          * 生成密钥对
