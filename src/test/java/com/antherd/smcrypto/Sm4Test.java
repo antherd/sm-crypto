@@ -4,10 +4,12 @@ import com.antherd.smcrypto.sm4.Sm4;
 import com.antherd.smcrypto.sm4.Sm4Options;
 import org.junit.Test;
 
+import javax.script.ScriptException;
+
 public class Sm4Test {
 
     @Test
-    public void test() {
+    public void test() throws ScriptException {
 
         /**
          * 加密

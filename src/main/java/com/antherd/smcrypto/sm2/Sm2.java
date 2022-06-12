@@ -33,12 +33,13 @@ public class Sm2 {
      * 生成密钥对：publicKey = privateKey * G
      *
      * @return 公私钥对
+     * @throws ScriptException Scripting通用异常
      */
-    public static Keypair generateKeyPairHex() {
+    public static Keypair generateKeyPairHex() throws ScriptException {
         ScriptObjectMirror scriptObjectMirror = null;
         try {
             scriptObjectMirror = (ScriptObjectMirror) invocable.invokeFunction("generateKeyPairHex");
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return new Keypair((String) scriptObjectMirror.get("privateKey"), (String) scriptObjectMirror.get("publicKey"));
@@ -51,8 +52,9 @@ public class Sm2 {
      * @param publicKey  公钥
      * @param cipherMode 1 - C1C3C2，0 - C1C2C3
      * @return 密文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String doEncrypt(String msg, String publicKey, int cipherMode) {
+    public static String doEncrypt(String msg, String publicKey, int cipherMode) throws ScriptException {
         if (msg == null || msg.trim().isEmpty()) {
             return "";
         }
@@ -60,7 +62,7 @@ public class Sm2 {
         try {
             Object[] param = new Object[]{msg, publicKey, cipherMode};
             encryptMsg = (String) invocable.invokeFunction("doEncrypt", param);
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return encryptMsg;
@@ -72,8 +74,9 @@ public class Sm2 {
      * @param msg       明文
      * @param publicKey 公钥
      * @return 密文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String doEncrypt(String msg, String publicKey) {
+    public static String doEncrypt(String msg, String publicKey) throws ScriptException {
         return doEncrypt(msg, publicKey, 1);
     }
 
@@ -84,8 +87,9 @@ public class Sm2 {
      * @param privateKey  私钥
      * @param cipherMode  1 - C1C3C2，0 - C1C2C3
      * @return 明文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String doDecrypt(String encryptData, String privateKey, int cipherMode) {
+    public static String doDecrypt(String encryptData, String privateKey, int cipherMode) throws ScriptException {
         if (encryptData == null || encryptData.trim().isEmpty()) {
             return "";
         }
@@ -93,7 +97,7 @@ public class Sm2 {
         try {
             Object[] param = new Object[]{encryptData, privateKey, cipherMode};
             msg = (String) invocable.invokeFunction("doDecrypt", param);
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return msg;
@@ -105,8 +109,9 @@ public class Sm2 {
      * @param encryptData 密文
      * @param privateKey  私钥
      * @return 明文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String doDecrypt(String encryptData, String privateKey) {
+    public static String doDecrypt(String encryptData, String privateKey) throws ScriptException {
         return doDecrypt(encryptData, privateKey, 1);
     }
 
@@ -117,12 +122,13 @@ public class Sm2 {
      * @param publicKey        公钥
      * @param signatureOptions 签名配置
      * @return 签名
+     * @throws ScriptException Scripting通用异常
      */
-    public static String doSignature(String msg, String publicKey, SignatureOptions signatureOptions) {
+    public static String doSignature(String msg, String publicKey, SignatureOptions signatureOptions) throws ScriptException {
         String signature = null;
         try {
             signature = (String) invocable.invokeFunction("doSignature", msg, publicKey, getOptionsMap(signatureOptions));
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return signature;
@@ -134,8 +140,9 @@ public class Sm2 {
      * @param msg       明文
      * @param publicKey 公钥
      * @return 签名
+     * @throws ScriptException Scripting通用异常
      */
-    public static String doSignature(String msg, String publicKey) {
+    public static String doSignature(String msg, String publicKey) throws ScriptException {
         return doSignature(msg, publicKey, null);
     }
 
@@ -147,12 +154,13 @@ public class Sm2 {
      * @param publicKey        公钥
      * @param signatureOptions 签名配置
      * @return 验签是否通过
+     * @throws ScriptException Scripting通用异常
      */
-    public static boolean doVerifySignature(String msg, String signHex, String publicKey, SignatureOptions signatureOptions) {
+    public static boolean doVerifySignature(String msg, String signHex, String publicKey, SignatureOptions signatureOptions) throws ScriptException {
         boolean result = false;
         try {
             result = (boolean) invocable.invokeFunction("doVerifySignature", msg, signHex, publicKey, getOptionsMap(signatureOptions));
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return result;
@@ -165,8 +173,9 @@ public class Sm2 {
      * @param signHex   签名
      * @param publicKey 公钥
      * @return 验签是否通过
+     * @throws ScriptException Scripting通用异常
      */
-    public static boolean doVerifySignature(String msg, String signHex, String publicKey) {
+    public static boolean doVerifySignature(String msg, String signHex, String publicKey) throws ScriptException {
         return doVerifySignature(msg, signHex, publicKey, null);
     }
 
@@ -191,7 +200,7 @@ public class Sm2 {
             options.put("hash", signatureOptions.isHash());
         }
         String publicKey = signatureOptions.getPublicKey();
-        if (publicKey!= null && !"".equals(publicKey.trim())) {
+        if (publicKey != null && !"".equals(publicKey.trim())) {
             options.put("publicKey", publicKey);
         }
         String userId = signatureOptions.getUserId();
