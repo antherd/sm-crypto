@@ -35,15 +35,16 @@ public class Sm4 {
      * @param key        key 16 进制字符串，要求为 128 比特
      * @param sm4Options 加密配置
      * @return 密文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String encrypt(String msg, String key, Sm4Options sm4Options) {
+    public static String encrypt(String msg, String key, Sm4Options sm4Options) throws ScriptException {
         if (msg == null || msg.trim().isEmpty()) {
             return "";
         }
         String encryptData = null;
         try {
             encryptData = (String) invocable.invokeFunction("encrypt", msg, key, getOptionsMap(sm4Options));
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return encryptData;
@@ -55,8 +56,9 @@ public class Sm4 {
      * @param msg 明文
      * @param key key 16 进制字符串，要求为 128 比特
      * @return 密文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String encrypt(String msg, String key) {
+    public static String encrypt(String msg, String key) throws ScriptException {
         return encrypt(msg, key, null);
     }
 
@@ -67,15 +69,16 @@ public class Sm4 {
      * @param key         key 16 进制字符串，要求为 128 比特
      * @param sm4Options  加密配置
      * @return 明文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String decrypt(String encryptData, String key, Sm4Options sm4Options) {
+    public static String decrypt(String encryptData, String key, Sm4Options sm4Options) throws ScriptException {
         if (encryptData == null || encryptData.trim().isEmpty()) {
             return "";
         }
         String decryptData = null;
         try {
             decryptData = (String) invocable.invokeFunction("decrypt", encryptData, key, getOptionsMap(sm4Options));
-        } catch (ScriptException | NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         return decryptData;
@@ -87,8 +90,9 @@ public class Sm4 {
      * @param encryptData 密文
      * @param key         16 进制字符串，要求为 128 比特
      * @return 明文
+     * @throws ScriptException Scripting通用异常
      */
-    public static String decrypt(String encryptData, String key) {
+    public static String decrypt(String encryptData, String key) throws ScriptException {
         return decrypt(encryptData, key, null);
     }
 
