@@ -1,6 +1,6 @@
 package com.antherd.smcrypto.sm2;
 
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.openjdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
