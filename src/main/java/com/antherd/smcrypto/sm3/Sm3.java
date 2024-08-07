@@ -1,25 +1,23 @@
 package com.antherd.smcrypto.sm3;
 
+import com.antherd.smcrypto.NashornProvider;
+import com.antherd.smcrypto.Provider;
+
 import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.*;
 
 /**
  * @author geyiwei
  */
 public class Sm3 {
-
+    static {
+        NashornProvider.printNonNashorn();
+    }
     private static Invocable invocable = null;
 
     static {
         try {
-            InputStream inputStream = Sm3.class.getClassLoader().getResourceAsStream("sm3.js");
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            assert inputStream != null;
-            engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
-            invocable = (Invocable) engine;
+            invocable = (Invocable) Provider.getJavaScriptEngine(Provider.SM3_CLASSPATH_RESOURCE_PATH);
         } catch (ScriptException e) {
             e.printStackTrace();
         }
