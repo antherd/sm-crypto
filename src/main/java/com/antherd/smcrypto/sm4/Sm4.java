@@ -1,11 +1,12 @@
 package com.antherd.smcrypto.sm4;
 
+import com.antherd.smcrypto.NashornProvider;
+import com.antherd.smcrypto.Provider;
+
 import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,19 +14,30 @@ import java.util.Map;
  * @author geyiwei
  */
 public class Sm4 {
-
+    static {
+        NashornProvider.printNonNashorn();
+    }
     private static Invocable invocable = null;
+    public static SecureRandom RANDOM = new SecureRandom();
 
     static {
         try {
-            InputStream inputStream = Sm4.class.getClassLoader().getResourceAsStream("sm4.js");
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            assert inputStream != null;
-            engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
-            invocable = (Invocable) engine;
+            invocable = (Invocable) Provider.getJavaScriptEngine(Provider.SM4_CLASSPATH_RESOURCE_PATH);
         } catch (ScriptException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * 随机生成一个可用的 SM4 秘钥
+     *
+     * @return SM4 秘钥
+     */
+    public static String generateKeyHex() {
+        byte[] bytes = new byte[16];
+        RANDOM.nextBytes(bytes);
+        return bytesToHex(bytes);
     }
 
     /**

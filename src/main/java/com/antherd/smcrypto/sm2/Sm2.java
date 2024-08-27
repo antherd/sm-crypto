@@ -1,12 +1,9 @@
 package com.antherd.smcrypto.sm2;
 
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import com.antherd.smcrypto.NashornProvider;
+import com.antherd.smcrypto.Provider;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.*;
+import javax.script.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,16 +11,17 @@ import java.util.Map;
  * @author geyiwei
  */
 public class Sm2 {
+    public static final int MODE_C1C3C2 = 0;
+    public static final int MODE_C1C2C3 = 1;
 
+    static {
+        NashornProvider.printNonNashorn();
+    }
     private static Invocable invocable = null;
 
     static {
         try {
-            InputStream inputStream = Sm2.class.getClassLoader().getResourceAsStream("sm2.js");
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            assert inputStream != null;
-            engine.eval(new BufferedReader(new InputStreamReader(inputStream)));
-            invocable = (Invocable) engine;
+            invocable = (Invocable) Provider.getJavaScriptEngine(Provider.SM2_CLASSPATH_RESOURCE_PATH);
         } catch (ScriptException e) {
             e.printStackTrace();
         }
@@ -36,13 +34,13 @@ public class Sm2 {
      * @throws ScriptException Scripting通用异常
      */
     public static Keypair generateKeyPairHex() throws ScriptException {
-        ScriptObjectMirror scriptObjectMirror = null;
+        Bindings bindings = null;
         try {
-            scriptObjectMirror = (ScriptObjectMirror) invocable.invokeFunction("generateKeyPairHex");
+            bindings = (Bindings) invocable.invokeFunction("generateKeyPairHex");
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return new Keypair((String) scriptObjectMirror.get("privateKey"), (String) scriptObjectMirror.get("publicKey"));
+        return new Keypair((String) bindings.get("privateKey"), (String) bindings.get("publicKey"));
     }
 
     /**
@@ -77,7 +75,7 @@ public class Sm2 {
      * @throws ScriptException Scripting通用异常
      */
     public static String doEncrypt(String msg, String publicKey) throws ScriptException {
-        return doEncrypt(msg, publicKey, 1);
+        return doEncrypt(msg, publicKey, MODE_C1C2C3);
     }
 
     /**
@@ -112,7 +110,7 @@ public class Sm2 {
      * @throws ScriptException Scripting通用异常
      */
     public static String doDecrypt(String encryptData, String privateKey) throws ScriptException {
-        return doDecrypt(encryptData, privateKey, 1);
+        return doDecrypt(encryptData, privateKey, MODE_C1C2C3);
     }
 
     /**
@@ -218,8 +216,8 @@ public class Sm2 {
     public static Point getPoint() {
         Point point = null;
         try {
-            ScriptObjectMirror invokeResult = (ScriptObjectMirror) invocable.invokeFunction("getPoint");
-            point = new Point((String) invokeResult.get("privateKey"), (String) invokeResult.get("publicKey"), (Map<String, Object>) invokeResult.get("k"), (Map<String, Object>) invokeResult.get("x1"));
+            Bindings bindings = (Bindings) invocable.invokeFunction("getPoint");
+            point = new Point((String) bindings.get("privateKey"), (String) bindings.get("publicKey"), (Map<String, Object>) bindings.get("k"), (Map<String, Object>) bindings.get("x1"));
         } catch (ScriptException | NoSuchMethodException e) {
             e.printStackTrace();
         }
