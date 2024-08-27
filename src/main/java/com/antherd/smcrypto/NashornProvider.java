@@ -4,8 +4,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Ice2Faith
- * @date 2024/8/7 19:54
- * @desc
  */
 public class NashornProvider {
 
@@ -27,7 +25,7 @@ public class NashornProvider {
     }
 
     public static void printNonNashorn() {
-        if(printed.getAndSet(true)){
+        if (printed.getAndSet(true)) {
             return;
         }
         boolean has = checkHasNashorn();
@@ -66,6 +64,5 @@ public class NashornProvider {
         }
         checked.set(true);
         return status.get();
-
     }
 }

@@ -29,7 +29,12 @@ public class Sm4 {
     }
 
 
-    public static String generateKey(){
+    /**
+     * 随机生成一个可用的 SM4 秘钥
+     *
+     * @return SM4 秘钥
+     */
+    public static String generateKeyHex() {
         byte[] bytes = new byte[16];
         RANDOM.nextBytes(bytes);
         return bytesToHex(bytes);

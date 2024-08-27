@@ -1,6 +1,5 @@
 package com.antherd.smcrypto;
 
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -10,8 +9,6 @@ import java.io.InputStreamReader;
 
 /**
  * @author Ice2Faith
- * @date 2024/8/7 20:20
- * @desc
  */
 public class Provider {
     public static final String SM2_CLASSPATH_RESOURCE_PATH = "sm2.js";
