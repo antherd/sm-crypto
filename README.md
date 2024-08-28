@@ -13,7 +13,7 @@
 <dependency>
     <groupId>com.antherd</groupId>
     <artifactId>sm-crypto</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.2.1</version>
 </dependency>
 ```
 
